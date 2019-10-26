@@ -1,0 +1,40 @@
+body {
+    background: url("..//images/travel.jpg");
+    background-size: 100%;
+
+
+}
+
+/* #container {
+    background-color: whitesmoke;
+    opacity: 0.5;
+    height: 100%;
+} */
+
+#travel-buttons, #travel-form {
+    text-align: center;
+    margin-bottom: 20px;
+   
+}
+
+button {
+    margin: 5px;
+    padding: 5px;
+    border: 2px;
+    opacity: 0.8;
+}
+
+label {
+    font-size: 20px;
+    
+}
+
+.gifImage {
+    height: 200x;
+    width: 200px;
+    
+}
+
+#travel-view {
+    text-align: center;
+}
