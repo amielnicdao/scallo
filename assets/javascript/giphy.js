@@ -1,15 +1,6 @@
-// eFzG2a2AQjNm9AZTaKy8K34s5WGOC5CX
-//https://api.giphy.com/v1/gifs/search?api_key=eFzG2a2AQjNm9AZTaKy8K34s5WGOC5CX&q=travel&limit=10&offset=0&rating=G&lang=en
-
-//create variables to store api, URL, search.
-//create an array of strings for travel places
-//append search results to html file
-//create for loop for prepopulated topics (travel) buttons
-
 $(document).ready(function () {
 
     var topics = ["London", "Paris", "Phuket", "Bali", "Tokyo", "Singapore"];
-
 
     function displayInitialTopics() {
         $("#travel-buttons").empty();
@@ -17,48 +8,71 @@ $(document).ready(function () {
         for (var i = 0; i < topics.length; i++) {
 
             var initialTopics = $("<button>");
-            initialTopics.addClass("travel-btn");
+            initialTopics.addClass("travel");
             initialTopics.attr("data-name", topics[i]);
-            initialTopics.text(topics[i]);
+            initialTopics.html(topics[i]);
+
             $("#travel-buttons").append(initialTopics);
         }
-    }
+    };
 
-    function displayTopics() {
+    function displayTravelGifs() {
         var travel = $(this).attr("data-name");
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + travel + "&api_key=eFzG2a2AQjNm9AZTaKy8K34s5WGOC5CX&limit=10";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + travel +
+            "&api_key=eFzG2a2AQjNm9AZTaKy8K34s5WGOC5CX&limit=10";
 
         $.ajax({
-
             url: queryURL,
             method: "GET"
-
         }).then(function (response) {
+            $("#travel-view").empty();
 
-            var topicsDiv = $("<div class='topics'>");
-            var rating = response.rating; //.data
-            var pRating = $("<p>").text("Rating: " + rating); 
-            topicsDiv.append(pRating);
-            $("#travel-view").prepend(topicsDiv);
-            //add image
+            for (var i = 0; i < response.data.length; i++) {
 
-        })
-    }
+                var gifDiv = $("<div class='gifDiv'>");
+                var rating = response.data[i].rating;
+                var ratingDiv = $("<p>").text("Rating: " + rating);
+                var animated = response.data[i].images.fixed_height.url;
+                var still = response.data[i].images.fixed_height_still.url;
+                var gifImage = $("<img class='gifImage'>");
 
-    $("#add-place").on("click", function(event) {
+                gifImage.attr("src", still);
+                gifImage.attr("data-still", still);
+                gifImage.attr("data-animate", animated);
+                gifImage.attr("data-state", "still");
+
+                gifDiv.append(ratingDiv);
+                gifDiv.prepend(gifImage);
+                $("#travel-view").prepend(gifDiv);
+            }
+        });
+    };
+
+    $("#add-place").on("click", function (event) {
         event.preventDefault();
-
-        var newTopics = $("#travel-input").val().trim();
-
-        topics.push(newTopics);
-
+        var newTravelTopic = $("#travel-input").val().trim();
+        topics.push(newTravelTopic);
+        $("#travel-input").val("");
         displayInitialTopics();
     });
 
-    $(document).on("click", ".travel-btn", displayTopics);
+    $(document).on("click", ".travel", displayTravelGifs);
+    displayInitialTopics();
 
-        displayInitialTopics();
+    $("#travel-view").on("click", ".gifImage", function () {
 
+        var state = $(this).attr("data-state");
+
+        if (state === "still") {
+
+            $(this).attr("src", $(this).data("animate"));
+            $(this).attr("data-state", "animate");
+        }
+
+        else {
+
+            $(this).attr("src", $(this).data("still"));
+            $(this).attr("data-state", "still");
+        }
+    });
 });
-
-// add function for gif state
